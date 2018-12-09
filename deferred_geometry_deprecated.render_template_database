@@ -10,10 +10,15 @@
 			</technique>
 		</template>		
 		
-
 		<template name="bullet_decal" sort_value="200">
 			<technique name="default">
 				<method name="bullet_decal"/>
+			</technique>
+		</template>
+
+		<template name="bullet_decal_parallax" sort_value="200">
+			<technique name="default">
+				<method name="bullet_decal_parallax"/>
 			</technique>
 		</template>
 
@@ -116,10 +121,37 @@
 			<technique name="default">
 				<method name="effect_op"/>
 			</technique>
+		</template>
+		<template name="effect_blood">
+			<technique name="default">
+				<method name="effect_blood"/>
+			</technique>
+		</template>
+		
+		<template name="effect_money">
+			<technique name="default">
+				<method name="effect_money"/>
+			</technique>
+		</template>
+		<template name="effect_money_menu">
+			<technique name="default">
+				<method name="effect_money_menu"/>
+			</technique>
 		</template>		
+		
+		<template name="effect_op_glow">
+			<technique name="default">
+				<method name="effect_op_glow"/>
+			</technique>
+		</template>
 		<template name="effect_op_add">
 			<technique name="default">
 				<method name="effect_op_add"/>
+			</technique>
+		</template>
+		<template name="effect_op_halo">
+			<technique name="default">
+				<method name="effect_op_halo"/>
 			</technique>
 		</template>
 		<template name="effect_nm_specmod_op">
