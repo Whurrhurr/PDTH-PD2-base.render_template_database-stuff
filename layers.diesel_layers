@@ -1,84 +1,138 @@
 <diesel_layers>
 <!-- Render targets -->
-	<render_target name="backbuffer_two" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" format="A8R8G8B8" msaa="false" srgb="false" hint_needs_clearing="false"/>
+	<defined platform="PS3 X360"> <!-- or low quality on PC -->
+		<render_target_alias name="bb" target="back_buffer"/>
 	
-	<render_target name="albedo" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" format="A8R8G8B8" msaa="false" srgb="false" hint_needs_clearing="false"/>
-	<render_target name="normal" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" format="A8R8G8B8" msaa="false" hint_needs_clearing="false"/>
- 	
-<!-- Used for dynamic lights and sun shadow -->
-	<render_target name="temp" src="back_buffer" size_from_render_settings="lighting_resolution" hint_needs_clearing="true" format="A8R8G8B8" msaa="false" srgb="false"/>
+	<!-- Albedo buffer -->
+		<render_target name="albedo" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" format="A8R8G8B8" msaa="false" srgb="false" hint_needs_clearing="false"/>
+		
+	<else/>
+		<!-- <render_target name="bb" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" format="A8R8G8B8" msaa="false" srgb="false" hint_needs_clearing="false"/> -->
+			<!-- TODO : Check if the bug with the broken gamma on some PC cards still exists -->
+		<render_target_alias name="bb" target="back_buffer"/>		
 	
-	<render_target_alias name="light_accumulation" target="back_buffer"/>
+	<!-- Albedo buffer -->
+		<render_target name="albedo" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" format="A8R8G8B8" msaa="false" srgb="false" hint_needs_clearing="false" esram="true" />
+	</defined>
 	
+<!-- Normal buffer -->	
+	<defined platform="PS3 X360"> <!-- or low quality on PC -->
+		<render_target name="normal" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" format="A8R8G8B8" msaa="false" hint_needs_clearing="false"/>
+	<else/>
+		<!-- High quality normals -->	
+		<render_target name="normal" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" format="A16B16G16R16F" msaa="false" hint_needs_clearing="false"  esram="true"/>
+	</defined>
+ 		
+<!-- Light buffer : Used for dynamic lights and sun shadow -->
+	<defined platform="PS3 X360"> <!-- or low quality light on PC -->
+		<render_target name="temp" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" hint_needs_clearing="true" format="A8R8G8B8" msaa="false" srgb="false"/>
+	<else/>		
+		<render_target name="temp" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" hint_needs_clearing="true" format="A16B16G16R16F" msaa="false" srgb="false" clear_color="0xff000000"/>
+	</defined>
+	
+<!-- Depth buffer -->
 	<conditional_render_target name="scene_depth_stencil" compare="format" pass="depth_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" format="DEPTHSTENCIL" msaa="false" hint_needs_clearing="false"/>
 	
-	<defined platform="X360 WIN32">
-		<render_target name="depth" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" format="R32" msaa="false" hint_needs_clearing="false"/>
+	<defined platform="X360 WIN32 PS4 XB1">
+		<render_target name="depth" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" format="R32" msaa="false" hint_needs_clearing="false" esram="true"/>
 	<else/>
 		<render_target_alias name="depth" target="scene_depth_stencil"/>
 	</defined>
 	
-<!-- Shadow targets -->
+<!-- Shadow buffer -->
 	<defined platform="X360">
-		<render_target name="shadow_depth" width="2048" height="2048" format="SHADOWMAP" hint_needs_clearing="true"/>
+		<render_target name="shadow_depth" width="1024" height="1024" format="SHADOWMAP" hint_needs_clearing="false"/>
 	<else/>
 		<defined platform="PS3">
-			<!-- <render_target name="shadow_depth" width="1216" height="1216" format="SHADOWMAP" hint_needs_clearing="true"/> -->
-			<render_target name="shadow_depth" width="2048" height="2048" format="SHADOWMAP" hint_needs_clearing="false"/>
+			<render_target name="shadow_depth" width="1024" height="1024" format="SHADOWMAP" hint_needs_clearing="false"/>
 		<else/>
-			<render_target name="shadow_depth" width="2048" height="2048" format="SHADOWMAP" hint_needs_clearing="false"/>
+			<render_target name="shadow_depth" width="8192" height="8192" format="SHADOWMAP" hint_needs_clearing="false" quality_from_render_settings="shadow_quality_default"/>
 		</defined>
 	</defined>
 	
-<!-- All of these should be removed -->
-	<!-- <render_target name="particles" src="albedo" w_scale="0.25" h_scale="0.25" format="A8R8G8B8" hint_needs_clearing="false"/> -->
-	<render_target name="particles" src="albedo" width="4" height="4" format="A8R8G8B8" hint_needs_clearing="false"/>
-	
-	<!--
-	<render_target name="fog_lookup" width="2048" height="2" format="A16B16G16R16F" hint_needs_clearing="false"/>
-	<render_target name="fog_depth" src="fog_lookup" format="DEPTHSTENCIL" hint_needs_clearing="false"/>
-	-->
-	
-<!-- Fog generation target -->
-	<render_target name="fog_lookup" width="512" height="1" format="A8R8G8B8" hint_needs_clearing="false"/>
-	
-<!-- These targets are setup to handle post effects etc -->
-	<!-- When all is done, remove reduntant .A channels, remove clear if possible -->
-	
-	<render_target name="contour_target" src="back_buffer" w_scale="1" h_scale="1" format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
-		<!-- Since we are clear this every frame, couldn't we re-use the temp target instead, clearing it just before the contour rendering -->
-	
-	<render_target name="low_target_1" src="back_buffer" w_scale="0.5" h_scale="0.5" format="A8R8G8B8" srgb="false" hint_needs_clearing="false"/>
-		<!-- TODO : Projected shadow blurring render target -->
-		<!-- Posteffect DOF target -->
-		<!-- This target needs the alpha channel for DOF -->
-	
-	<render_target name="low_target_2" src="back_buffer" w_scale="0.25" h_scale="0.25"  format="A8R8G8B8" srgb="false" hint_needs_clearing="false"/>
-	<render_target name="low_target_2_b" src="back_buffer" w_scale="0.25" h_scale="0.25"  format="A8R8G8B8" srgb="false" hint_needs_clearing="false"/>
-		<!-- Used when blurring shadows and SSAO early on -->
-		<!-- Things to glow, flare, streak, in post effect -->
-
-	<render_target name="low_target_3" src="back_buffer" w_scale="0.125" h_scale="0.125"  format="A8R8G8B8" srgb="false" hint_needs_clearing="false"/>
-	<render_target name="low_target_3_b" src="back_buffer" w_scale="0.125" h_scale="0.125"  format="A8R8G8B8" srgb="false" hint_needs_clearing="false"/>
-		<!-- Used when blurring shadows and SSAO early on -->
-		<!-- Things to glow, flare, streak, in post effect -->
-	
-	<render_target name="low_target_4" src="back_buffer" w_scale="0.062" h_scale="0.062"  format="A8R8G8B8" srgb="false" hint_needs_clearing="false"/>
-	
-	<!-- Light buffer downsample -->
-	<render_target name="downsample1" width="64" height="64" format="A8R8G8B8" srgb="false" hint_needs_clearing="false"/>
-	<render_target name="downsample2" width="16" height="16" format="A8R8G8B8" srgb="false" hint_needs_clearing="false"/>
-	<render_target name="downsample3" width="1" height="1" format="A8R8G8B8" srgb="false" hint_needs_clearing="false"/>
-	<render_target name="downsample4" width="1" height="1" format="A8R8G8B8" srgb="false" hint_needs_clearing="false"/>
-	
-	<render_target_alias name="canvas" target="backbuffer_two"/>
-	
-<!-- this could be removed too -->
-	<defined render_settings="lowres_lighting=true">
-		<render_target_alias name="distortion_source" target="canvas"/>
-	<else/>
-		<render_target_alias name="distortion_source" target="canvas"/>
+<!-- Posteffect targets -->
+	<defined platform="WIN32 PS4 XB1">
+		<render_target name="contour_target" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+		<!-- normal is re-used on the PS3 -->
 	</defined>
+
+	<!-- Mid resolution depth -->
+	<render_target name="mid_depth_1" src="back_buffer" w_scale="0.75" h_scale="0.75" own_depth_buffer="false" format="R32" srgb="false" msaa="false" hint_needs_clearing="false"/>
+	
+	<!-- Low resolution depth -->
+	<render_target name="low_depth_1" src="back_buffer" w_scale="0.35" h_scale="0.35" own_depth_buffer="false" format="R32" srgb="false" msaa="false" hint_needs_clearing="false"/>
+
+	<!-- Full resolution targets -->
+	<render_target name="high_target_1" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" format="A8R8G8B8" msaa="false" hint_needs_clearing="false"/>
+	<render_target name="high_target_1_b" src="back_buffer" size_from_render_settings="lighting_resolution" own_depth_buffer="false" format="A8R8G8B8" msaa="false" hint_needs_clearing="true"/>
+
+	<!-- Mid resolution targets -->
+	<render_target name="mid_target_1" src="back_buffer" w_scale="0.75" h_scale="0.75" format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+	<render_target name="mid_target_1_b" src="back_buffer" w_scale="0.75" h_scale="0.75" format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+
+	<!-- Low resolution targets -->
+	<render_target name="low_target_1" src="back_buffer" w_scale="0.5" h_scale="0.5" format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+	<render_target name="low_target_1_b" src="back_buffer" w_scale="0.5" h_scale="0.5" format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+	<render_target name="low_target_2" src="back_buffer" w_scale="0.25" h_scale="0.25"  format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+	
+	<defined platform="WIN32 PS4 XB1">
+		<render_target name="low_target_2_b" src="back_buffer" w_scale="0.25" h_scale="0.25"  format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+		
+		<render_target name="low_target_3" src="back_buffer" w_scale="0.125" h_scale="0.125"  format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+		<render_target name="low_target_3_b" src="back_buffer" w_scale="0.125" h_scale="0.125"  format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+		
+		<render_target name="low_target_4" src="back_buffer" w_scale="0.062" h_scale="0.062"  format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+		<render_target name="low_target_4_b" src="back_buffer" w_scale="0.062" h_scale="0.062"  format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+		
+		<render_target name="low_target_5" src="back_buffer" w_scale="0.031" h_scale="0.031"  format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+		<render_target name="low_target_5_b" src="back_buffer" w_scale="0.031" h_scale="0.031"  format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+	</defined>
+	
+	<render_target name="low_target_6" src="back_buffer" w_scale="0.016" h_scale="0.016"  format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+	<render_target name="low_target_6_b" src="back_buffer" w_scale="0.016" h_scale="0.016"  format="A8R8G8B8" srgb="false" hint_needs_clearing="true"/>
+	
+	<!-- AO targets -->	
+	<render_target_alias name="ssao_depth_low" target="low_depth_1"/>
+	<render_target_alias name="ssao_depth_mid" target="mid_depth_1"/>
+	<render_target_alias name="ssao_buffer" target="mid_target_1"/>
+	<render_target_alias name="ssao_blur" target="mid_target_1_b"/>
+	<render_target_alias name="temp_ao" target="high_target_1"/>
+
+	<defined render_caps="vr">
+		<render_target name="dof_cutter" src="back_buffer" w_scale="0.125" h_scale="0.125" format="A8" srgb="false" hint_needs_clearing="true"/>
+		<!-- <render_target_alias name="adaptive_quality_output" target="high_target_1"/> -->
+		<!-- <render_target name="adaptive_quality_output" src="back_buffer" size_from_render_settings="lighting_resolution" format="X8R8G8B8" srgb="false" hint_needs_clearing="false"/> -->
+	</defined>
+
+	<!-- Self illumination bloom -->
+	<render_target_alias name="il_bloom" target="high_target_1_b"/>
+
+	<!-- SMAA targets -->
+    <render_target_alias name="smaa_edgetex" target="contour_target"/>
+    <render_target_alias name="smaa_blendtex" target="high_target_1"/>
+
+<!-- GUI Mask render target -->
+	<render_target_alias name="mask_target" target="low_target_2"/>
+	
+<!-- UI Targets -->
+	<render_target_alias name="ui_blur_render" target="bb"/>
+	
+<!-- LUT blending -->
+	<render_target name="lut_target" width="256" height="16" format="A8R8G8B8" srgb="false" hint_needs_clearing="false"/>
+	
+<!-- TODO -->	
+	<defined platform="WIN32 PS4 XB1"> <!-- or low quality on PC -->
+		<render_target_alias name="distortion_source" target="bb"/>
+	<else/>
+		<render_target_alias name="distortion_source" target="low_target_6_b"/>	
+	</defined>
+	
+	<!-- Example of render settings param read -->
+		<!--
+		<defined render_settings="lowres_lighting=true">
+		<else/>
+		</defined>
+		-->
 	
 <!-- --------------- WORLD LAYER --------------- -->
 	<layer_setup name="world">
@@ -90,6 +144,20 @@
 		<layer name = "depth_laydown" sort = "front_back" statistics_scope="depth_laydown" depth_stencil_target="scene_depth_stencil"/>
 		-->
 		
+		<!-- TODO : If we are removing writes to stencil for alot of objects, we want to do one stencil filler pass here -->
+			<!-- This way we make sure we have a clean buffer for every frame -->
+		
+		<!-- Render masks to full screen -->
+		<!-- Render full screen to small 512x512 buffer, slicing the part with the masks out -->
+		<!-- Render a polygon over the area where the mask where, filling the depth buffer in that location with camera far range -->
+		
+		<layer name="mask_target_render" sort="front_back" render_target="bb" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
+			<!-- render masks -->
+		
+		<post_processor name="blit_masks" file="core/shaders/post_processor" default_effect="blit_masks" target="bb" statistics_scope="post_processor"/>
+			<!-- blit masks -->
+			<!-- render flat poly to clear -->
+		
 <!-- GBuffer -->
 		<defined platform="PS3">
 			<layer name = "deferred_core_environment" sort = "front_back" render_target="albedo normal" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
@@ -98,127 +166,170 @@
 			
 			<layer name = "deferred_ambient" sort = "shader" render_target="albedo normal" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
 			
-			<layer name = "deferred_cops" sort = "shader" render_target="albedo normal" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
-			<layer name = "deferred_civilians" sort = "shader" render_target="albedo normal" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
-			<layer name = "deferred_players" sort = "shader" render_target="albedo normal" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
+			<layer name = "deferred_cops" sort = "shader_front_back" render_target="albedo normal" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
+			<layer name = "deferred_civilians" sort = "shader_front_back" render_target="albedo normal" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
+			<layer name = "deferred_players" sort = "shader_front_back" render_target="albedo normal" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
 			<layer name = "deferred_3rdweapons" sort = "shader" render_target="albedo normal" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
 			
 			<layer name = "deferred_backdrop" sort = "shader" render_target="albedo normal" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
 			
 			<layer name = "deferred_ambient_alpha_masked" sort = "front_back" render_target="albedo normal" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
 		<else/>
-			<layer name = "deferred_core_environment" sort = "front_back" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
-			<layer name = "deferred_environment" sort = "front_back" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
-			<layer name = "deferred_bigprops" sort = "front_back" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
+			<layer name = "deferred_core_environment" sort = "shader_front_back" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
+			<layer name = "deferred_environment" sort = "shader_front_back" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
+			<layer name = "deferred_bigprops" sort = "shader_front_back" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
 			
-			<layer name = "deferred_ambient" sort = "shader" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
+			<layer name = "deferred_ambient" sort = "shader_front_back" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
 				
-			<layer name = "deferred_cops" sort = "shader" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
-			<layer name = "deferred_civilians" sort = "shader" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
-			<layer name = "deferred_players" sort = "shader" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
-			<layer name = "deferred_3rdweapons" sort = "shader" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
+			<layer name = "deferred_cops" sort = "shader_front_back" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
+			<layer name = "deferred_civilians" sort = "shader_front_back" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
+			<layer name = "deferred_players" sort = "shader_front_back" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
+			<layer name = "deferred_3rdweapons" sort = "shader_front_back" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
 			
-			<layer name = "deferred_backdrop" sort = "shader" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
+			<layer name = "deferred_backdrop" sort = "shader_front_back" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>
 			
-			<layer name = "deferred_ambient_alpha_masked" sort = "front_back" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>	
+			<layer name = "deferred_ambient_alpha_masked" sort = "shader_front_back" render_target="albedo normal depth" depth_stencil_target="scene_depth_stencil" statistics_scope="deferred_ambient"/>	
 		</defined>
 		
-		<layer name = "deferred_semi_transparent_albedo" sort = "back_front" render_target="albedo" statistics_scope="decals" depth_stencil_target="scene_depth_stencil"/>
-		<layer name = "deferred_semi_transparent_normal" sort = "back_front" render_target="normal" depth_stencil_target="scene_depth_stencil"/>
+		<defined platform="X360">
+			
+		<else/>
+			<layer name = "deferred_semi_transparent_albedo" sort = "back_front" render_target="albedo" statistics_scope="decals" depth_stencil_target="scene_depth_stencil"/>
+			<layer name = "deferred_semi_transparent_normal" sort = "back_front" render_target="normal" depth_stencil_target="scene_depth_stencil"/>
+		</defined>
 		
-		<ndefined platform="PS3">
+		<defined platform="WIN32 PS4 XB1">
 			<layer name = "deferred_semi_transparent_depth" sort = "back_front" render_target="depth" depth_stencil_target="scene_depth_stencil"/>
-		</ndefined>
+		</defined>
 	 	
-<!-- Things that have a blank shader or a unspecified render layer, nothing should really render here -->
-		<layer name="ambient" std_layer="solids" sort="shader_front_back" render_target="canvas" depth_stencil_target="scene_depth_stencil" statistics_scope="forward_ambient"/>
+		<defined platform="X360">
+			<layer name="deferred_ambient_fps" sort="front_back" render_target="albedo normal depth" statistics_scope="deferred_ambient" depth_stencil_target="scene_depth_stencil"/>
+		</defined>
 		
-<!-- FPS weapon -->	
+<!-- Things that have a blank shader or a unspecified render layer, nothing should really render here -->
+		<layer name="ambient" std_layer="solids" sort="shader_front_back" render_target="bb" depth_stencil_target="scene_depth_stencil" statistics_scope="forward_ambient"/>
+	
+		<!-- AO -->
+		<post_processor name="ao_post_processor" file="core/shaders/post_processor" default_effect="AO_aob" target="bb" statistics_scope="post_processor"/>
+		
+<!-- FPS weapon -->
 		<defined platform="PS3">
- 			<layer name="deferred_ambient_fps_depth" sort="front_back" render_target="albedo" statistics_scope="deferred_ambient" depth_stencil_target="scene_depth_stencil"/>
+			<layer name="deferred_ambient_fps_depth" sort="front_back" render_target="albedo" statistics_scope="deferred_ambient" depth_stencil_target="scene_depth_stencil"/>
  			<layer name="deferred_ambient_fps" sort="front_back" render_target="albedo normal" statistics_scope="deferred_ambient" depth_stencil_target="scene_depth_stencil"/>
 		<else/>
- 			<layer name="deferred_ambient_fps_depth" sort="front_back" render_target="depth" statistics_scope="deferred_ambient" depth_stencil_target="scene_depth_stencil"/>
- 			<layer name="deferred_ambient_fps" sort="front_back" render_target="albedo normal depth" statistics_scope="deferred_ambient" depth_stencil_target="scene_depth_stencil"/>
+			<defined platform="X360">
+			<else/>
+				<layer name="deferred_ambient_fps_depth" sort="front_back" render_target="depth" statistics_scope="deferred_ambient" depth_stencil_target="scene_depth_stencil"/>
+				<layer name="deferred_ambient_fps" sort="front_back" render_target="albedo normal depth" statistics_scope="deferred_ambient" depth_stencil_target="scene_depth_stencil"/>
+
+				<layer name="deferred_semi_transparent_fps_albedo" sort="back_front" render_target="albedo" statistics_scope="decals" depth_stencil_target="scene_depth_stencil"/>
+				<layer name="deferred_semi_transparent_fps_normal" sort="back_front" render_target="normal" depth_stencil_target="scene_depth_stencil"/>
+			</defined>
 		</defined>
 	 	
-<!-- Self illumination -->
-		<layer name="self_illumination" sort="front_back" render_target="temp" depth_stencil_target="scene_depth_stencil" statistics_scope="il_and_envmap"/>
+	 	<!-- AO mask weapon -->
+	 	<post_processor name="ao_mask_post_processor" file="core/shaders/post_processor" default_effect="AO_mask_weapon" target="bb" statistics_scope="post_processor"/>
+
+<!-- SHADOW -->
+		<post_processor name="shadow_processor" file="core/shaders/shadow_processor" default_effect="shadow_rendering" target="bb" statistics_scope="shadows"/>
 		
-		<post_processor name="shadow_processor" file="core/shaders/shadow_processor" default_effect="shadow_rendering" target="canvas" statistics_scope="shadows"/>
-		
-<!-- Sun shadows
-		<defined platform="PCD3D9">
-			<post_processor name="shadow_processor" file="core/shaders/shadow_processor" default_effect="shadow_rendering_PC" target="canvas" statistics_scope="shadows"/>
-		<else/>
-			<post_processor name="shadow_processor" file="core/shaders/shadow_processor" default_effect="shadow_rendering" target="canvas" statistics_scope="shadows"/>
-		</defined>
--->
-		
-<!-- Render outline meshes -->
-		<layer name="contours" sort="back_front" render_target="contour_target"/> <!-- back_front -->
-		
-<!-- Move streaks to deffered post processor -->
-		<post_processor name="streaks" file="core/shaders/post_processor" default_effect="streaks" target="canvas" statistics_scope="post_processor"/>
-		
-<!-- Apply cube -->
-		<post_processor name="cube_apply" file="core/shaders/post_processor" default_effect="cube_apply_empty" target="albedo" statistics_scope="post_processor"/>
-		
-<!-- Preferred light system -->
-		<post_processor name="deferred" file="core/shaders/deferred_post_processor" default_effect="deferred_lighting" target="canvas" statistics_scope="lighting"/>
-		
-<!-- Sky dome -->
+<!-- SKY DOME -->
 		<interleaved_scene statistics_scope="sky"/>
 		
-<!-- Streaks -->
-		<post_processor name="tonemapper" file="core/shaders/post_processor" default_effect="streaks_2" target="canvas" statistics_scope="post_processor"/>
+<!-- SELF ILLUMINATION -->		
+		<layer name="self_illumination" sort="front_back" render_target="temp il_bloom" depth_stencil_target="scene_depth_stencil" statistics_scope="il_and_envmap"/>
 		
-<!-- Fog -->
-		<!-- <post_processor name="fog_apply" file="core/shaders/post_processor" default_effect="fog_apply" target="canvas" statistics_scope="fog_apply"/> -->
-		<post_processor name="fog_processor" file="core/shaders/fog_generator_processor" default_effect="fog" target="canvas" statistics_scope="fog_lookup"/>
+<!-- RAIN RIPPLES EFFECT -->
+		<post_processor name="rain_post_processor" file="core/shaders/post_processor" default_effect="rain_off" depth_stencil_target="scene_depth_stencil" target="back_buffer" statistics_scope="post_processor"/>
+
+<!-- PREFERRED LIGHT -->
+		<post_processor name="deferred" file="core/shaders/deferred_post_processor" default_effect="deferred_lighting" target="bb" statistics_scope="lighting"/>
 		
-<!-- Transparent pass -->
-		<layer name="transparent" std_layer="transparent" sort="back_front" render_target="canvas" x360_max_resolves="1" win32_max_resolves="1" ps3_max_resolves="1" statistics_scope="transparent_overlay_particles" depth_stencil_target="scene_depth_stencil"/>
-	  
+<!-- EXTRA GLOW PASS FOR EFFECTS -->
+		<layer name="effect_glow" sort="back_front" render_target="bb" x360_max_resolves="1" win32_max_resolves="1" ps3_max_resolves="1" statistics_scope="transparent_overlay_particles" depth_stencil_target="scene_depth_stencil"/>
+		
+<!-- DRAW TRANSPARENCY -->
+		<layer name="transparent" std_layer="transparent" sort="back_front" render_target="bb" x360_max_resolves="1" win32_max_resolves="1" ps3_max_resolves="1" statistics_scope="transparent_overlay_particles" depth_stencil_target="scene_depth_stencil"/>
+		
+	<!-- DRAW SMOKE ALPHA -->
+		<!-- DRAW -->
+		<!-- FILTER -->
+		<!-- APPLY -->
+		
 <!-- Distortion shaders -->
-		<layer name="distortion" sort="back_front" statistics_scope="distortion_additive" render_target="canvas" depth_stencil_target="scene_depth_stencil" win32_max_resolves="1" x360_max_resolves="1" ps3_max_resolves="1"/>
+		<defined platform="WIN32 PS4 XB1">
+			<layer name="distortion" sort="back_front" statistics_scope="distortion_additive" render_target="bb" depth_stencil_target="scene_depth_stencil" win32_max_resolves="1" x360_max_resolves="1" ps3_max_resolves="1"/>
+		</defined>
+
+<!-- Anti aliasing -->
+		<post_processor name="anti_aliasing_post_processor" file="core/shaders/post_processor" default_effect="AA_fxaa" target="bb" statistics_scope="post_processor"/>
 		
-<!-- Transparents on FPS models -->
-		<layer name="transparent_fps" sort="back_front" render_target="canvas" x360_max_resolves="1" win32_max_resolves="1" ps3_max_resolves="1" statistics_scope="transparent_overlay_particles" depth_stencil_target="scene_depth_stencil"/>
+<!-- OUTLINE MESHES -->
+		<defined platform="PS3 X360">
+			<layer name="contours" sort="back_front" render_target="normal"/>
+		<else/>	
+			<layer name="contours" sort="back_front" render_target="contour_target"/>
+		</defined>	
 		
 <!-- Post effects, DOF, Flare, Glow -->
-		<post_processor name="hdr_post_processor" file="core/shaders/post_processor" default_effect="default" target="backbuffer" statistics_scope="post_processor"/>
+		<!-- Start post past -->
+		<post_processor name="hdr_post_processor" file="core/shaders/post_processor" default_effect="default" target="bb" statistics_scope="post_processor"/>
 		
-<!-- Color grading -->
-		<post_processor name="color_grading_post" file="core/shaders/post_processor" default_effect="color_off" target="albedo" statistics_scope="post_processor"/>
+		<defined render_caps="vr">
+			<!-- Render DOF cutters -->		
+			<layer name="dof_cutter" sort="back_front" render_target="dof_cutter" no_depth_stencil="true" statistics_scope="transparent_overlay_particles"/>
+		</defined>
+				
+		<!-- Continue post pass -->
+		<post_processor name="bloom_combine_post_processor" file="core/shaders/post_processor" default_effect="bloom_combine" target="bb" statistics_scope="post_processor"/>
+				
+<!-- Transparents on FPS models -->
+		<defined platform="PS3 X360">
+			<layer name="transparent_fps" sort="back_front" render_target="albedo" x360_max_resolves="1" win32_max_resolves="1" ps3_max_resolves="1" statistics_scope="transparent_overlay_particles" depth_stencil_target="scene_depth_stencil"/>
+		<else/>
+			<layer name="transparent_fps" sort="back_front" render_target="bb" x360_max_resolves="1" win32_max_resolves="1" ps3_max_resolves="1" statistics_scope="transparent_overlay_particles" depth_stencil_target="scene_depth_stencil"/>
+		</defined>
 		
-<!-- AA -->
-		<post_processor name="AA_post" file="core/shaders/post_processor" default_effect="AA" target="backbuffer" statistics_scope="post_processor"/>
- 		
+<!-- LUT -->
+		<post_processor name="color_grading_post" file="core/shaders/post_processor" default_effect="color_off" target="back_buffer" statistics_scope="post_processor"/>
+		
+<!-- TOOLS AND DEBUG STUFF, NEED A EDITOR/DEBUG TAG HERE -->
+<!-- Render to backbuffer -->
+		<!-- <post_processor name="render_to_backbuffer" file="core/shaders/render_to_backbuffer" default_effect="default" target="bb" statistics_scope="post_processor"/> -->
+			<!-- Moved these here so that we can cut the contours target, and apply after blur etc -->
+		
 <!-- HUD, Menu, Debug etc -->
 		<layer name="overlay" std_layer="overlay" sort="back_front"/>
 		<layer name="overlay_foreground" std_layer="overlay" sort="back_front"/>
-		<layer name="additive" std_layer="additive" sort="shader"/> 
-
-<!-- Depth project for light generation -->
-		<post_processor name="depth_projection" file="core/shaders/post_processor" default_effect="depth_project_empty" target="canvas" statistics_scope="post_processor"/>
+		<layer name="additive" std_layer="additive" sort="shader"/>
+			<!-- TODO : why/how its applied to the background as it is, and if its gamma correct? -->
+				<!-- Gamma correct that shit in the shader if not correct on output -->
+		
+<!-- TOOLS AND DEBUG STUFF, NEED A EDITOR/DEBUG TAG HERE -->		
+		<defined platform="WIN32 PS4 XB1">
+			<post_processor name="depth_projection" file="core/shaders/render_to_backbuffer" default_effect="default" target="back_buffer" statistics_scope="post_processor"/>
+		</defined>
 		
 	</layer_setup>
 	
 	<layer_setup name="underlay">
-		<layer name="ambient" std_layer="solids" sort="shader_front_back" render_target="canvas" depth_stencil_target="scene_depth_stencil"/>	
-		<layer name="transparent" std_layer="transparent" sort="back_front" render_target="canvas" depth_stencil_target="scene_depth_stencil"/>
-		
-		<!--
-		<layer name="overlay" std_layer="overlay" sort="back_front" render_target="light_accumulation" depth_stencil_target="scene_depth_stencil"/>
-		-->
+		<layer name="ambient" std_layer="solids" sort="shader_front_back" render_target="bb" depth_stencil_target="scene_depth_stencil"/>	
+		<layer name="transparent" std_layer="transparent" sort="back_front" render_target="bb" depth_stencil_target="scene_depth_stencil"/>
+		<layer name="overlay" std_layer="overlay" sort="back_front" render_target="bb" depth_stencil_target="scene_depth_stencil"/>
 	</layer_setup>
 	
 	<layer_setup name="overlay">
+
+		<layer name="overlay_background" std_layer="overlay" render_target="high_target_1" sort="back_front"/>
+
+		<!-- TODO : Are these motherfuckers gamma correct and how does things end up here -->
 		<layer name="ambient" std_layer="solids" sort="shader_front_back" statistics_scope="overlay"/>	
 		<layer name="transparent" std_layer="transparent" sort="back_front"/>	
 		<layer name="overlay" std_layer="overlay" sort="back_front"/>	
-		<layer name="additive" std_layer="additive" sort="shader"/>	
+		<layer name="additive" std_layer="additive" sort="shader"/>
+		
+		<!-- <post_processor name="adaptive_quality_output" file="core/shaders/render_to_backbuffer" default_effect="default" statistics_scope="overlay"/> -->
+
 	</layer_setup>	
 	
 	<layer_setup name="loading_environment">		
@@ -229,7 +340,27 @@
 	
 	<layer_setup name="shadows">
 		<layer name="ambient" sort="shader_front_back"/> <!-- front_back -->
+			<!-- TODO : Should this be shader sorted? -->
 	</layer_setup>
-</diesel_layers>
 
+	<layer_setup name="gbuffer_clear">
+		<layer name="ambient" sort="shader_front_back"/>
+		<post_processor name="transfer_back_buffer" file="core/shaders/render_to_backbuffer" default_effect="default" target="back_buffer" statistics_scope="post_processor"/>
+
+		<!-- Light -->
+		<layer name="clear0" sort="front_back" render_target="temp" depth_stencil_target="scene_depth_stencil" clear_flags="surface"/>
+		<!-- Albedo -->
+		<layer name="clear1" sort="front_back" render_target="albedo" depth_stencil_target="scene_depth_stencil" clear_flags="surface"/>
+		<!-- Normals -->
+		<layer name="clear2" sort="front_back" render_target="normal" depth_stencil_target="scene_depth_stencil" clear_flags="surface"/>
+		<!-- Bloom il -->
+		<layer name="clear3" sort="front_back" render_target="il_bloom" depth_stencil_target="scene_depth_stencil" clear_flags="surface"/>				
+		<!-- Contours -->
+		<layer name="clear4" sort="front_back" render_target="contour_target" depth_stencil_target="scene_depth_stencil" clear_flags="surface"/>
+	</layer_setup>
+
+
+	<layer_setup name="menu_world" clone="world"/>
+
+</diesel_layers>
 
