@@ -42,6 +42,18 @@
                 <method name="FXAA_MOD:default"/>
             </technique>
         </template>
+        <template name="bink_frame" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="bink_frame:default"/>
+            </technique>
+        </template>
+        <template name="bink_frame_old" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="bink_frame_old:default"/>
+            </technique>
+        </template>
         <template name="blend:ADD" sort_value="">
             <shader_input_declaration/>
             <technique name="default">
@@ -207,6 +219,12 @@
                 <method name="identity_alpha:default"/>
             </technique>
         </template>
+        <template name="identity_left" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="identity_left:default"/>
+            </technique>
+        </template>
         <template name="initial_luminance" sort_value="">
             <shader_input_declaration/>
             <technique name="default">
@@ -314,19 +332,6 @@
             <shader_input_declaration/>
             <technique name="default">
                 <method name="soften:default"/>
-            </technique>
-        </template>
-        <template name="ssao" sort_value="">
-            <shader_input_declaration/>
-            <technique name="default">
-                <method name="ssao:default:DX10_4X_MSAA" platforms="PCD3D10" required_settings="msaa_4x"/>
-                <method name="ssao:default"/>
-            </technique>
-        </template>
-        <template name="ssao_blur" sort_value="">
-            <shader_input_declaration/>
-            <technique name="default">
-                <method name="ssao_blur:default"/>
             </technique>
         </template>
         <template name="stencil_mark_skydome" sort_value="">
