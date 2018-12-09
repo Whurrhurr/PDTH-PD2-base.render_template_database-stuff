@@ -1,0 +1,407 @@
+<diesel_render_system>
+    <render_templates>
+        <template name="post_AA" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_AA:default"/>
+            </technique>
+        </template>
+        <template name="post_AA:ONE_SMP" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_AA:default:ONE_SMP"/>
+            </technique>
+        </template>
+        <template name="post_HDR_bright_pass" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_HDR_bright_pass:default"/>
+            </technique>
+        </template>
+        <template name="post_HDR_shuffle" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_HDR_shuffle:default"/>
+            </technique>
+        </template>
+        <template name="post_HDR_slice" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_HDR_slice:default"/>
+            </technique>
+        </template>
+        <template name="post_HDR_tonemapping" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_HDR_tonemapping:default"/>
+            </technique>
+        </template>
+        <template name="post_HDR_upscale" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_HDR_upscale:default"/>
+            </technique>
+        </template>
+        <template name="post_apply_cube" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_apply_cube:default"/>
+            </technique>
+        </template>
+        <template name="post_color_grading" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_color_grading:default"/>
+            </technique>
+        </template>
+        <template name="post_composite" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_composite:default"/>
+            </technique>
+        </template>
+        <template name="post_composite:NO_LIGHT_ADAPTION" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_composite:default:NO_LIGHT_ADAPTION"/>
+            </technique>
+        </template>
+        <template name="post_contour_mask" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_contour_mask:default"/>
+            </technique>
+        </template>
+        <template name="post_cubemap_ps3_error_fix" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_cubemap_ps3_error_fix:default"/>
+            </technique>
+        </template>
+        <template name="post_depth" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_depth:default"/>
+            </technique>
+        </template>
+        <template name="post_depth_composite" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_depth_composite:default"/>
+            </technique>
+        </template>
+        <template name="post_depth_prep" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_depth_prep:default"/>
+            </technique>
+        </template>
+        <template name="post_dist:DIST" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_dist:default:DIST"/>
+            </technique>
+        </template>
+        <template name="post_dist:HALF_NEG" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_dist:default:HALF_NEG"/>
+            </technique>
+        </template>
+        <template name="post_dist:HALF_POS" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_dist:default:HALF_POS"/>
+            </technique>
+        </template>
+        <template name="post_downsample" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default"/>
+            </technique>
+        </template>
+        <template name="post_downsample:A" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:A"/>
+            </technique>
+        </template>
+        <template name="post_downsample:A:AOUT" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:A:AOUT"/>
+            </technique>
+        </template>
+        <template name="post_downsample:A:AOUT:BIG_CORE" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:A:AOUT:BIG_CORE"/>
+            </technique>
+        </template>
+        <template name="post_downsample:A:AOUT:SMALL_CORE" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:A:AOUT:SMALL_CORE"/>
+            </technique>
+        </template>
+        <template name="post_downsample:A:BIG_CORE" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:A:BIG_CORE"/>
+            </technique>
+        </template>
+        <template name="post_downsample:A:SMALL_CORE" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:A:SMALL_CORE"/>
+            </technique>
+        </template>
+        <template name="post_downsample:AOUT" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:AOUT"/>
+            </technique>
+        </template>
+        <template name="post_downsample:AOUT:BIG_CORE" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:AOUT:BIG_CORE"/>
+            </technique>
+        </template>
+        <template name="post_downsample:AOUT:BIG_CORE:RGB" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:AOUT:BIG_CORE:RGB"/>
+            </technique>
+        </template>
+        <template name="post_downsample:AOUT:RGB" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:AOUT:RGB"/>
+            </technique>
+        </template>
+        <template name="post_downsample:AOUT:RGB:SMALL_CORE" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:AOUT:RGB:SMALL_CORE"/>
+            </technique>
+        </template>
+        <template name="post_downsample:AOUT:SMALL_CORE" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:AOUT:SMALL_CORE"/>
+            </technique>
+        </template>
+        <template name="post_downsample:BIG_CORE:RGB" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:BIG_CORE:RGB"/>
+            </technique>
+        </template>
+        <template name="post_downsample:FIRSTRGB" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:FIRSTRGB"/>
+            </technique>
+        </template>
+        <template name="post_downsample:LERP" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:LERP"/>
+            </technique>
+        </template>
+        <template name="post_downsample:MOD" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:MOD"/>
+            </technique>
+        </template>
+        <template name="post_downsample:RGB" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:RGB"/>
+            </technique>
+        </template>
+        <template name="post_downsample:RGB:SMALL_CORE" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_downsample:default:RGB:SMALL_CORE"/>
+            </technique>
+        </template>
+        <template name="post_extract_illumination" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_extract_illumination:default"/>
+            </technique>
+        </template>
+        <template name="post_fog" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_fog:default"/>
+            </technique>
+        </template>
+        <template name="post_glow" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_glow:default"/>
+            </technique>
+        </template>
+        <template name="post_glow:AVG" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_glow:default:AVG"/>
+            </technique>
+        </template>
+        <template name="post_glow:PREP" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_glow:default:PREP"/>
+            </technique>
+        </template>
+        <template name="post_glow:PREP_AVG" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_glow:default:PREP_AVG"/>
+            </technique>
+        </template>
+        <template name="post_glow:TWOTEX" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_glow:default:TWOTEX"/>
+            </technique>
+        </template>
+        <template name="post_glow_flare_bake" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_glow_flare_bake:default"/>
+            </technique>
+        </template>
+        <template name="post_glow_horizontal" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_glow_horizontal:default"/>
+            </technique>
+        </template>
+        <template name="post_glow_vertical" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_glow_vertical:default"/>
+            </technique>
+        </template>
+        <template name="post_lens_flare" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_lens_flare:default"/>
+            </technique>
+        </template>
+        <template name="post_lens_streaks_filter" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_lens_streaks_filter:default"/>
+            </technique>
+        </template>
+        <template name="post_lens_streaks_max" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_lens_streaks_max:default"/>
+            </technique>
+        </template>
+        <template name="post_lg" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_lg:default"/>
+            </technique>
+        </template>
+        <template name="post_motion_blur" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_motion_blur:default"/>
+            </technique>
+        </template>
+        <template name="post_pc_color_correction" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_pc_color_correction:default"/>
+            </technique>
+        </template>
+        <template name="post_prep_lens_flare" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_prep_lens_flare:default"/>
+            </technique>
+        </template>
+        <template name="post_rain_ripples" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_rain_ripples:default"/>
+            </technique>
+        </template>
+        <template name="post_shadow_debug" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_shadow_debug:default"/>
+            </technique>
+        </template>
+        <template name="post_stencil_debug" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_stencil_debug:default"/>
+            </technique>
+        </template>
+        <template name="post_stencil_debug:A" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_stencil_debug:default:A"/>
+            </technique>
+        </template>
+        <template name="post_stencil_debug:B" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_stencil_debug:default:B"/>
+            </technique>
+        </template>
+        <template name="post_stencil_debug:C" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_stencil_debug:default:C"/>
+            </technique>
+        </template>
+        <template name="post_stencil_debug:D" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_stencil_debug:default:D"/>
+            </technique>
+        </template>
+        <template name="post_stencil_debug:WRITE_MASK" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_stencil_debug:default:WRITE_MASK"/>
+            </technique>
+        </template>
+        <template name="post_stencil_debug:WRITE_MASK_A" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_stencil_debug:default:WRITE_MASK_A"/>
+            </technique>
+        </template>
+        <template name="post_stencil_debug:WRITE_MASK_B" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_stencil_debug:default:WRITE_MASK_B"/>
+            </technique>
+        </template>
+        <template name="post_stencil_debug:WRITE_MASK_C" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_stencil_debug:default:WRITE_MASK_C"/>
+            </technique>
+        </template>
+        <template name="post_stencil_debug:WRITE_MASK_D" sort_value="">
+            <shader_input_declaration/>
+            <technique name="default">
+                <method name="post_stencil_debug:default:WRITE_MASK_D"/>
+            </technique>
+        </template>
+    </render_templates>
+</diesel_render_system>
+ 

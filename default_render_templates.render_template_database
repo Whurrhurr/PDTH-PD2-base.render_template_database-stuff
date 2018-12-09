@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+
+<diesel_render_system>
+	<render_templates>				
+		<!-- fixed function emulation -->
+		<template name="Text" bind_shader_parameters="true">
+			<technique name="default">
+				<method name="Text"/>
+			</technique>
+		</template>
+		<template name="LineObject" bind_shader_parameters="true">
+			<technique name="default">
+				<method name="LineObject"/>
+			</technique>
+		</template>		
+		<template name="VertexColor" bind_shader_parameters="true">
+			<technique name="default">
+				<method name="VertexColor"/>
+			</technique>
+		</template>		
+		<template name="VertexColorTextured" bind_shader_parameters="true">
+			<technique name="default">
+				<method name="VertexColorTextured"/>
+			</technique>
+		</template>		
+		<template name="OverlayVertexColor" bind_shader_parameters="true">
+			<technique name="default">
+				<method name="OverlayVertexColor"/>
+			</technique>
+		</template>		
+		<template name="OverlayVertexColorTextured" bind_shader_parameters="true">
+			<technique name="default">
+				<method name="OverlayVertexColorTextured"/>
+			</technique>
+		</template>
+		<template name="OverlayTextured" bind_shader_parameters="true">
+			<technique name="default">
+				<method name="OverlayTextured"/>
+			</technique>
+		</template>
+		<template name="OverlayForegroundTextured" bind_shader_parameters="true">
+			<technique name="default">
+				<method name="OverlayForegroundTextured"/>
+			</technique>
+		</template>
+		<template name="BackgroundVertexColorTextured" bind_shader_parameters="true">
+			<technique name="default">
+				<method name="BackgroundVertexColorTextured"/>
+			</technique>
+		</template>
+		<template name="BackgroundTextured" bind_shader_parameters="true">
+			<technique name="default">
+				<method name="BackgroundTextured"/>
+			</technique>
+		</template>
+		<!--
+		<template name="Gouraud" bind_shader_parameters="true">
+			<technique name="default">
+				<method name="Gouraud"/>
+			</technique>
+		</template>		
+		<template name="Diffuse" bind_shader_parameters="true">
+			<technique name="default">
+				<method name="Diffuse"/>
+			</technique>
+		</template>		
+		<template name="Sprite" bind_shader_parameters="true">
+			<technique name="default">
+				<method name="Sprite"/>
+			</technique>
+		</template>		
+		<template name="Halo" bind_shader_parameters="true">
+			<technique name="default">
+				<method name="Halo"/>
+			</technique>
+		</template>		
+		-->
+	</render_templates>
+</diesel_render_system>

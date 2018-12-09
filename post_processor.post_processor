@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<post_processor>
+	<filters>
+		<filter name="vertical_max">
+			<render_template name="box"/>
+			<sample weight="1" x_offset = "-1" y_offset = "-1"/>
+			<sample weight="1" x_offset = "0" y_offset = "-1"/>
+			<sample weight="1" x_offset = "1" y_offset = "-1"/>
+			<sample weight="1" x_offset = "-1" y_offset = "0"/>
+			<sample weight="1" x_offset = "0" y_offset = "0"/>
+			<sample weight="1" x_offset = "1" y_offset = "0"/>
+			<sample weight="1" x_offset = "-1" y_offset = "1"/>
+			<sample weight="1" x_offset = "0" y_offset = "1"/>
+			<sample weight="1" x_offset = "1" y_offset = "1"/>
+		</filter>	
+		<filter name="box">
+			<render_template name="4_tap_filter"/>
+		</filter>
+		<filter name="identity">
+			<render_template name="identity"/>
+		</filter>
+		<filter name="exposure">
+			<render_template name="exposure"/>
+		</filter>
+		<filter name="downsample_4x4">
+			<render_template name="downsample_4x4"/>
+			<sample weight="0.0625" x_offset = "-1.5" y_offset = "-1.5"/>
+			<sample weight="0.0625" x_offset = "-0.5" y_offset = "-1.5"/>
+			<sample weight="0.0625" x_offset = " 0.5" y_offset = "-1.5"/>
+			<sample weight="0.0625" x_offset = " 1.5" y_offset = "-1.5"/>
+			<sample weight="0.0625" x_offset = "-1.5" y_offset = "-0.5"/>
+			<sample weight="0.0625" x_offset = "-0.5" y_offset = "-0.5"/>
+			<sample weight="0.0625" x_offset = " 0.5" y_offset = "-0.5"/>
+			<sample weight="0.0625" x_offset = " 1.5" y_offset = "-0.5"/>
+			<sample weight="0.0625" x_offset = "-1.5" y_offset = "0.5"/>
+			<sample weight="0.0625" x_offset = "-0.5" y_offset = "0.5"/>
+			<sample weight="0.0625" x_offset = " 0.5" y_offset = "0.5"/>
+			<sample weight="0.0625" x_offset = " 1.5" y_offset = "0.5"/>
+			<sample weight="0.0625" x_offset = "-1.5" y_offset = "1.5"/>
+			<sample weight="0.0625" x_offset = "-0.5" y_offset = "1.5"/>
+			<sample weight="0.0625" x_offset = " 0.5" y_offset = "1.5"/>
+			<sample weight="0.0625" x_offset = " 1.5" y_offset = "1.5"/>			
+		</filter>
+		<filter name="initial_luminance">
+			<render_template name="initial_luminance"/>
+			<sample weight="0.11111" x_offset = "-1" y_offset = "-1"/>
+			<sample weight="0.11111" x_offset = "0" y_offset = "-1"/>
+			<sample weight="0.11111" x_offset = "1" y_offset = "-1"/>
+			<sample weight="0.11111" x_offset = "-1" y_offset = "0"/>
+			<sample weight="0.11111" x_offset = "0" y_offset = "0"/>
+			<sample weight="0.11111" x_offset = "1" y_offset = "0"/>
+			<sample weight="0.11111" x_offset = "-1" y_offset = "1"/>
+			<sample weight="0.11111" x_offset = "0" y_offset = "1"/>
+			<sample weight="0.11111" x_offset = "1" y_offset = "1"/>
+		</filter>
+		
+		<filter name="3_tap_filter_horizontal">
+			<render_template name="3_tap_filter"/>
+		</filter>
+		
+		<filter name="3_tap_filter_vertical">
+			<render_template name="3_tap_filter"/>
+		</filter>
+		
+		<filter name="9_tap_filter">
+			<render_template name="9_tap_filter"/>
+		</filter>
+		
+		<filter name="9_tap_filter_pow">
+			<render_template name="9_tap_filter_pow"/>
+		</filter>
+		
+		<filter name="13_tap_gaussian_blur">
+			<render_template name="gaussian_blur"/>
+		</filter>
+		
+		<filter name="bloom_add">
+			<render_template name="bloom_add"/>
+		</filter>
+
+		<filter name="FXAA_MOD">
+			<render_template name="FXAA_MOD"/>
+		</filter>		
+		
+<!-- New filters -->
+		<filter name="post_HDR_rect">
+			<render_template name="post_HDR_rect"/>
+		</filter>
+					
+	</filters>
+	
+	<materials>		
+		<material name="tone_mapping">
+			<variable name="disable_tone_mapping" type="scalar" value="0"/>
+			<variable name="copy_luminance_target" type="scalar" value="0"/>
+			
+			<variable name="luminance_clamp" type="vector3" value="0.0 16 0"/>
+			<variable name="white_luminance" type="scalar" value="1.8"/>
+			<variable name="middle_grey" type="scalar" value="0.5"/>
+			
+			<variable name="dark_to_bright_adaption_speed" type="scalar" value="10"/>
+			<variable name="bright_to_dark_adaption_speed" type="scalar" value="10"/>			
+		</material>
+		
+		<material name="tonemap">
+			<variable name="tonemap_settings_a" type="vector3" value="1 4 8"/>
+		</material>
+		
+		<material name="bright_pass" unique="true">			
+			<variable name="disable_tone_mapping" type="scalar" value="0"/>
+			<variable name="middle_grey" type="scalar" value="0.18"/>
+			<variable name="white_luminance" type="scalar" value="1"/>
+			<variable name="threshold" type="scalar" value="0.8"/>			
+		</material>
+		
+		<material name="bloom_color_correction" unique="true">
+			<variable name="opacity" type="scalar" value="0.5"/>
+			<!--
+			<filter_color_texture file="core/textures/color_curve"/>
+			-->
+		</material>		
+		
+		<material name="fog" unique="true">
+			<variable name="start_color" type="vector3" value="0.37 0.40 0.49"/>
+			<variable name="color0" type="vector3" value="0.33 0.38 0.49"/>
+			<variable name="color1" type="vector3" value="0.43 0.44 0.49"/>
+			<variable name="color2" type="vector3" value="0.43 0.44 0.49"/>
+			<variable name="start" type="scalar" value="0"/>
+			<variable name="end0" type="scalar" value="14000"/>
+			<variable name="end1" type="scalar" value="34000"/>
+			<variable name="end2" type="scalar" value="54000"/>
+		</material>	
+		
+		<material name="soften">
+			<variable name="threshold" type="scalar" value="0.7"/>
+			<variable name="max" type="scalar" value="0.6"/>
+		</material>
+		
+		<material name="blur">
+			<variable name="near_focus_distance_min" type="scalar" value="25"/>
+			<variable name="near_focus_distance_max" type="scalar" value="225"/>
+			<variable name="far_focus_distance_min" type="scalar" value="5000"/>
+			<variable name="far_focus_distance_max" type="scalar" value="14000"/>			
+			<variable name="clamp" type="scalar" value="0.5"/>
+		</material>
+		
+		<material name="radial_blur">
+			<variable name="world_pos" type="vector3" value="0 0 0"/>
+			<variable name="kernel_size" type="scalar" value="16"/>
+			<variable name="falloff_exponent" type="scalar" value="1"/>
+			<variable name="opacity" type="scalar" value="0.0"/>	
+		</material>
+		
+<!-- New materials -->
+		<material name="post_composite">
+			<!-- Noise -->
+			<!-- <variable name="noise_animation" type="vector3" value="0 0 0"/> --> <!-- sin(t), cos(t), speed -->
+			<!-- <variable name="noise_settings" type="vector3" value="1 1 0"/> --> <!-- noise amount, dist amount, unused -->
+			
+			<!--
+			<filter_color_texture file="core/textures/noise_sharp"/>
+			-->
+			
+			<reflection_texture type="cubemap" file="environments/cubemaps/cubemap_street_01"/>
+			 
+			<!-- DOF -->
+			<variable name="dof_settings" type="vector3" value="0 0 0"/> <!-- near, far, amount -->
+			
+			<variable name="hit_feedback_rlu" type="vector3" value="0 0 0"/>
+			<variable name="hit_feedback_d" type="scalar" value="0"/>
+			
+			<!-- Motion blur -->
+			<!-- <variable name="camera_mb_dir" type="vector3" value="0 0 0"/> --> <!-- direction.x, direction.y, amount -->
+			<!-- <variable name="camera_mb_settings" type="vector3" value="25 225 1"/> --> <!-- near, far, amount -->
+			
+			<!--
+			<variable name="blur_vec" type="vector3" value="0 0 4"/>
+			-->
+			
+<!-- Tint -->
+			<!--
+			<variable name="tint" type="vector3" value="1 1 1"/>
+			-->
+			
+<!-- Remove, use a simple color to multiply with instead -->
+			<!-- Color correction -->
+			<variable name="tgl_r" type="vector3" value="0 1 1"/>
+			
+			<!--
+			<variable name="tgl_g" type="vector3" value="0 1 1"/>
+			<variable name="tgl_b" type="vector3" value="0 1 1"/>
+			-->
+			
+			<!-- Lens glare 
+			<variable name="lg_settings" type="vector3"  value="1 3 1"/>
+			-->
+			
+<!-- bake into shader -->
+			<!-- AA 
+			<variable name="AA_settings" type="vector3" value="0.5 1.5 0"/>
+			-->
+			
+<!-- remove -->
+			<!-- HDR 
+			<variable name="HDR_size" type="scalar" value="0.25"/>
+			<variable name="HDR_adaption" type="scalar" value="100"/>
+			<variable name="HDR_upscale" type="scalar" value="2"/>
+			-->
+			
+			<!--
+			<variable name="glow_settings_a" type="vector3" value="0.75 1.25 0"/>
+			<variable name="glow_settings_b" type="vector3" value="3 2 0"/>
+			-->
+			
+		</material>
+		
+		<material name="post_fog">
+			<variable name="fog_settings" type="vector3" value="300000 0.6 30"/> <!-- end opacity pow -->
+			<variable name="fog_color" type="vector3" value="0.42 0.56 0.71"/>
+		</material>
+		
+		<material name="post_depth">
+			<variable name="depth_setting" type="scalar" value="500"/> <!-- end range -->
+		</material>
+		
+		<material name="post_lens_streak_tile">
+			<variable name="tile_offset" type="vector3" value="0.3 0 0"/>
+		</material>
+		
+		<material name="post_glow_step1">
+			<variable name="offset" type="scalar" value="0.005"/>
+		</material>
+		<material name="post_glow_step2">
+			<variable name="offset" type="scalar" value="0.01"/>
+		</material>
+		<material name="post_glow_step3">
+			<variable name="offset" type="scalar" value="0.02"/>
+		</material>		
+		
+		<material name="post_rain_ripples">
+			<filter_color_texture file="core/textures/rain_ripples_nm"/>
+		</material>
+		
+		<material name="post_flare">
+			<variable name="flare_color_1" type="vector3" value="4 2 2"/>
+			<variable name="flare_color_2" type="vector3" value="3 1.5 2"/>
+			<variable name="flare_color_3" type="vector3" value="2.5 1 2.5"/>
+			<variable name="flare_scale" type="vector3" value="1.4 0.9 0.35"/>
+		</material>
+		
+		<material name="post_apply_cube_bank">
+			<reflection_texture type="cubemap" file="environments/cubemaps/cubemap_bank_01"/>
+		</material>		
+		<material name="post_apply_cube_street">
+			<reflection_texture type="cubemap" file="environments/cubemaps/cubemap_street_01"/>
+		</material>
+		<material name="post_apply_cube_apartment">
+			<reflection_texture type="cubemap" file="environments/cubemaps/cubemap_apartment_01"/>
+		</material>
+		<material name="post_apply_cube_bridge">
+			<reflection_texture type="cubemap" file="environments/cubemaps/cubemap_bridge_01"/>
+		</material>
+		<material name="post_apply_cube_diamond">
+			<reflection_texture type="cubemap" file="environments/cubemaps/cubemap_diamond_01"/>
+		</material>
+		<material name="post_apply_cube_slaughter">
+			<reflection_texture type="cubemap" file="environments/cubemaps/cubemap_slaughter_01"/>
+		</material>
+		<material name="post_apply_cube_suburbia">
+			<reflection_texture type="cubemap" file="environments/cubemaps/cubemap_suburbia_01"/>
+		</material>
+		
+		<material name="post_cubemap_ps3_error_fix">
+			<reflection_texture type="cubemap" file="core/textures/cubemap_template_day"/>
+		</material>
+
+<!-- Colorgrades -->
+		<material name="cg_payday">
+			<self_illumination_texture file="core/textures/cg_payday"/>
+		</material>
+		<material name="cg_heat">
+			<self_illumination_texture file="core/textures/cg_heat"/>
+		</material>
+		<material name="cg_nice">
+			<self_illumination_texture file="core/textures/cg_nice"/>
+		</material>
+		<material name="cg_sin">
+			<self_illumination_texture file="core/textures/cg_sin"/>
+		</material>
+		<material name="cg_bhd">
+			<self_illumination_texture file="core/textures/cg_bhd"/>
+		</material>
+		<material name="cg_xgen">
+			<self_illumination_texture file="core/textures/cg_xgen"/>
+		</material>
+		<material name="cg_xxxgen">
+			<self_illumination_texture file="core/textures/cg_xxxgen"/>
+		</material>
+		<material name="cg_matrix">
+			<self_illumination_texture file="core/textures/cg_matrix"/>
+		</material>
+		
+	</materials>
+	
+	<render_targets>
+		<!-- Streaks 
+		<render_target name="lens_streaks_1" width="512" height="32" format="A8R8G8B8" hint_needs_clearing="false"/>
+		<render_target name="lens_streaks_2" width="256" height="4" format="A8R8G8B8" hint_needs_clearing="false"/>
+		<render_target name="lens_streaks_3" width="128" height="1" format="A8R8G8B8" hint_needs_clearing="false"/> 
+	 	-->
+	 	
+		<!-- Streaks : Now cheaper -->
+		<render_target name="lens_streaks_1" width="256" height="32" format="A8R8G8B8" hint_needs_clearing="false"/>
+		<render_target name="lens_streaks_2" width="128" height="16" format="A8R8G8B8" hint_needs_clearing="false"/>
+		<render_target name="lens_streaks_3" width="128" height="1" format="A8R8G8B8" hint_needs_clearing="false"/> 
+	</render_targets>
+	
+	<effect name="cubemap_ps3_error_fix">
+ 		<combiner diffuse_texture="lens_streaks_1" dst="particles" render_template="post_cubemap_ps3_error_fix" material="post_cubemap_ps3_error_fix"/>
+ 	</effect>
+ 	
+<!-- Empty -->
+	<effect name="empty">
+		<texture_filter src="canvas" dst="albedo" filter="identity"/>
+ 	</effect>
+ 	
+	<effect name="extract_illumination">
+ 	</effect>
+ 	
+<!-- Light generation -->
+	<effect name="depth_project">
+		<texture_filter src="temp" dst="back_buffer" filter="identity"/>
+	</effect>
+	
+<!-- Debug -->
+ 	<effect name="depth_project_empty">
+ 	</effect>
+ 	
+<!-- Just AA -->
+	<effect name="default_AA">
+	</effect>
+	
+<!-- Fogging -->
+ 	<effect name="fog_apply">
+ 		<!-- <combiner diffuse_texture="low_target_2" dst="canvas" render_template="post_fog" material="post_fog" scriptable="post_fog" depth_stencil_target="scene_depth_stencil"/> -->
+ 	</effect>
+	
+<!-- World cube -->
+	<effect name="cube_apply_empty">
+		<!-- <combiner diffuse_texture="normal" dst="albedo" render_template="post_apply_cube" material="post_apply_cube" depth_stencil_target="scene_depth_stencil"/> -->
+	</effect>
+	<effect name="cube_apply_bank">
+		<combiner diffuse_texture="normal" dst="albedo" render_template="post_apply_cube" material="post_apply_cube_bank" depth_stencil_target="scene_depth_stencil"/>
+	</effect>
+	<effect name="cube_apply_street">
+		<combiner diffuse_texture="normal" dst="albedo" render_template="post_apply_cube" material="post_apply_cube_street" depth_stencil_target="scene_depth_stencil"/>
+	</effect>
+	<effect name="cube_apply_apartment">
+		<combiner diffuse_texture="normal" dst="albedo" render_template="post_apply_cube" material="post_apply_cube_apartment" depth_stencil_target="scene_depth_stencil"/>
+	</effect>
+	<effect name="cube_apply_bridge">
+		<combiner diffuse_texture="normal" dst="albedo" render_template="post_apply_cube" material="post_apply_cube_bridge" depth_stencil_target="scene_depth_stencil"/>
+	</effect>
+	<effect name="cube_apply_diamond">
+		<combiner diffuse_texture="normal" dst="albedo" render_template="post_apply_cube" material="post_apply_cube_diamond" depth_stencil_target="scene_depth_stencil"/>
+	</effect>
+	<effect name="cube_apply_slaughter">
+		<combiner diffuse_texture="normal" dst="albedo" render_template="post_apply_cube" material="post_apply_cube_slaughter" depth_stencil_target="scene_depth_stencil"/>
+	</effect>
+	<effect name="cube_apply_suburbia">
+		<combiner diffuse_texture="normal" dst="albedo" render_template="post_apply_cube" material="post_apply_cube_suburbia" depth_stencil_target="scene_depth_stencil"/>
+	</effect>
+	
+<!-- Tonemapping and avg_lum creation -->
+	<effect name="tonemap">
+	</effect>
+	
+ 	<effect name="tonemap_disable">
+ 	</effect>
+ 	
+	<effect name="streaks_2">
+		<!-- Streaks -->
+		<defined platform="PS3">
+			<!--
+			<combiner diffuse_texture="low_target_4" dst="lens_streaks_2" render_template="post_lens_streaks_filter" material="post_composite" scriptable="post_composite"/>
+			<combiner diffuse_texture="lens_streaks_2" dst="lens_streaks_3" render_template="post_lens_streaks_max"/>
+		 	<combiner diffuse_texture="lens_streaks_3" self_illumination_texture="canvas" dst="canvas" render_template="post_lg" material="post_composite" scriptable="post_composite"/>
+		 	-->
+		 	
+		<else/>
+		 	<!-- <combiner diffuse_texture="canvas" dst="canvas" render_template="post_pc_color_correction"/> --> <!-- color correction for PC color errors -->
+		 	
+			<combiner diffuse_texture="low_target_4" dst="lens_streaks_1" render_template="post_lens_streaks_filter" material="post_composite" scriptable="post_composite"/>
+			<combiner diffuse_texture="lens_streaks_1" dst="lens_streaks_2" render_template="post_lens_streaks_max"/>
+			<combiner diffuse_texture="lens_streaks_2" dst="lens_streaks_3" render_template="post_lens_streaks_max"/>
+		 	
+		 	<combiner diffuse_texture="lens_streaks_3" self_illumination_texture="canvas" dst="canvas" render_template="post_lg" depth_stencil_target="scene_depth_stencil" material="post_composite" scriptable="post_composite"/>
+		</defined>
+	</effect>
+	<effect name="streaks_2_off">
+	</effect>
+	
+ 	<effect name="streaks">
+ 	</effect>
+ 	
+ 	<effect name="streaks_rain">
+		<!-- Rain ripples for bridge -->
+		<defined platform="PS3">
+			<!-- <combiner diffuse_texture="normal" dst="normal" render_template="post_rain_ripples" material="post_rain_ripples"/> -->
+		<else/>
+			<combiner diffuse_texture="normal" dst="normal" render_template="post_rain_ripples" material="post_rain_ripples"/>
+		</defined>
+ 	</effect>
+ 	
+<!-- Default ingame post effect -->
+ 	<effect name="default">
+ 		<defined platform="PS3">
+ 			<texture_filter src="canvas" dst="low_target_1" filter="identity"/>
+ 		<else/>
+ 			<!-- <combiner diffuse_texture="canvas" dst="albedo" render_template="post_pc_color_correction"/> --> <!-- color correction for PC color errors --> 
+ 		</defined>
+ 		
+	<!-- Light estimation downsample -->
+		<defined platform="PS3">
+			<combiner diffuse_texture="low_target_1" dst="downsample2" render_template="post_downsample:FIRSTRGB"/>
+			<combiner diffuse_texture="downsample2" dst="downsample3" render_template="post_downsample:RGB"/>
+		<else/>
+			<combiner diffuse_texture="canvas" dst="downsample1" render_template="post_downsample:FIRSTRGB"/>
+			<combiner diffuse_texture="downsample1" dst="downsample2" render_template="post_downsample:RGB"/>
+			<combiner diffuse_texture="downsample2" dst="downsample3" render_template="post_downsample:RGB"/>
+		</defined>
+		
+		<combiner diffuse_texture="downsample3" self_illumination_texture="downsample4" dst="downsample4" render_template="post_downsample:LERP"/>
+		<combiner diffuse_texture="downsample4" dst="downsample3" render_template="post_downsample:MOD"/>
+	 	
+	<!-- Blur/Glow generation -->
+		<defined platform="PS3">
+			<combiner diffuse_texture="low_target_1" dst="low_target_3" render_template="post_glow:PREP" material="post_composite" scriptable="post_composite"/>
+			<combiner diffuse_texture="low_target_3" self_illumination_texture="downsample3" dst="low_target_4" render_template="post_glow:PREP_AVG"/>
+			<combiner diffuse_texture="low_target_3" self_illumination_texture="low_target_4" dst="low_target_2" render_template="post_glow:AVG"/>
+		<else/>
+			<combiner diffuse_texture="canvas" dst="low_target_1" render_template="post_glow:PREP" material="post_composite" scriptable="post_composite"/>
+			<texture_filter src="low_target_1" dst="low_target_2" filter="9_tap_filter" bake_filter_taps="false"/>
+			<texture_filter src="low_target_2" dst="low_target_3" filter="9_tap_filter" bake_filter_taps="false"/>
+			<combiner diffuse_texture="low_target_3" self_illumination_texture="downsample3" dst="low_target_4" render_template="post_glow:PREP_AVG"/>
+			<combiner diffuse_texture="low_target_3" self_illumination_texture="low_target_4" dst="low_target_2" render_template="post_glow:AVG"/>
+		</defined>
+ 		
+	<!-- Blur apply, Contrast curves, Color modification -->
+		<defined platform="PS3">
+			<!--<combiner diffuse_texture="canvas" self_illumination_texture="low_target_2" dst="back_buffer" render_template="post_composite" material="post_composite" scriptable="post_composite"/>-->
+			<combiner diffuse_texture="canvas" self_illumination_texture="low_target_2" dst="back_buffer" render_template="post_composite" material="post_composite" scriptable="post_composite"/>
+		<else/>
+			<combiner diffuse_texture="canvas" self_illumination_texture="low_target_2" dst="albedo" render_template="post_composite" material="post_composite" scriptable="post_composite"/>
+		</defined>
+		
+	<!-- Contour blur and apply -->
+		<defined platform="PS3">
+			<texture_filter src="contour_target" dst="low_target_1" filter="identity"/>
+			<combiner diffuse_texture="low_target_1" dst="low_target_2" render_template="post_glow_horizontal"/>
+			<combiner diffuse_texture="low_target_2" dst="low_target_2_b" render_template="post_glow_vertical"/>
+			<combiner diffuse_texture="low_target_2_b" dst="low_target_3" render_template="post_glow_horizontal"/>
+			<combiner diffuse_texture="low_target_3" dst="low_target_3_b" render_template="post_glow_vertical"/>
+			
+			<combiner diffuse_texture="low_target_2_b" self_illumination_texture="low_target_3_b" dst="low_target_2" render_template="post_glow:TWOTEX"/>
+			<combiner diffuse_texture="contour_target" self_illumination_texture="low_target_2" dst="back_buffer" render_template="post_contour_mask" depth_stencil_target="scene_depth_stencil"/>
+		<else/>
+			<combiner diffuse_texture="contour_target" dst="low_target_1" render_template="post_glow_horizontal"/>
+			<combiner diffuse_texture="low_target_1" dst="low_target_1" render_template="post_glow_vertical"/>
+			<combiner diffuse_texture="low_target_1" dst="low_target_2" render_template="post_glow_horizontal"/>
+			<combiner diffuse_texture="low_target_2" dst="low_target_2_b" render_template="post_glow_vertical"/>
+			<combiner diffuse_texture="low_target_2_b" dst="low_target_3" render_template="post_glow_horizontal"/>
+			<combiner diffuse_texture="low_target_3" dst="low_target_3_b" render_template="post_glow_vertical"/>
+			
+			<combiner diffuse_texture="low_target_2_b" self_illumination_texture="low_target_3_b" dst="low_target_1" render_template="post_glow:TWOTEX"/>
+			<combiner diffuse_texture="contour_target" self_illumination_texture="low_target_1" dst="albedo" render_template="post_contour_mask" depth_stencil_target="scene_depth_stencil"/>
+		</defined>
+	</effect>
+	
+<!-- Default ingame post effect without light adaption (not supported on PS3) -->
+ 	<effect name="no_light_adaption">
+	<!-- Light estimation downsample -->
+		<combiner diffuse_texture="canvas" dst="downsample1" render_template="post_downsample:FIRSTRGB"/>
+		<combiner diffuse_texture="downsample1" dst="downsample2" render_template="post_downsample:RGB"/>
+		<combiner diffuse_texture="downsample2" dst="downsample3" render_template="post_downsample:RGB"/>
+		<combiner diffuse_texture="downsample3" self_illumination_texture="downsample4" dst="downsample4" render_template="post_downsample:LERP"/>
+		<combiner diffuse_texture="downsample4" dst="downsample3" render_template="post_downsample:MOD"/>
+	 	
+	<!-- Blur/Glow generation -->
+		<combiner diffuse_texture="canvas" dst="low_target_1" render_template="post_glow:PREP" material="post_composite" scriptable="post_composite"/>
+		<texture_filter src="low_target_1" dst="low_target_2" filter="9_tap_filter" bake_filter_taps="false"/>
+		<texture_filter src="low_target_2" dst="low_target_3" filter="9_tap_filter" bake_filter_taps="false"/>
+		<combiner diffuse_texture="low_target_3" self_illumination_texture="downsample3" dst="low_target_4" render_template="post_glow:PREP_AVG"/>
+		<combiner diffuse_texture="low_target_3" self_illumination_texture="low_target_4" dst="low_target_2" render_template="post_glow:AVG"/>
+ 		
+	<!-- Blur apply, Contrast curves, Color modification -->
+		<combiner diffuse_texture="canvas" self_illumination_texture="low_target_2" dst="albedo" render_template="post_composite:NO_LIGHT_ADAPTION" material="post_composite" scriptable="post_composite"/>
+		
+	<!-- Contour blur and apply -->
+		<combiner diffuse_texture="contour_target" dst="low_target_1" render_template="post_glow_horizontal"/>
+		<combiner diffuse_texture="low_target_1" dst="low_target_1" render_template="post_glow_vertical"/>
+		<combiner diffuse_texture="low_target_1" dst="low_target_2" render_template="post_glow_horizontal"/>
+		<combiner diffuse_texture="low_target_2" dst="low_target_2_b" render_template="post_glow_vertical"/>
+		<combiner diffuse_texture="low_target_2_b" dst="low_target_3" render_template="post_glow_horizontal"/>
+		<combiner diffuse_texture="low_target_3" dst="low_target_3_b" render_template="post_glow_vertical"/>
+		
+		<combiner diffuse_texture="low_target_2_b" self_illumination_texture="low_target_3_b" dst="low_target_1" render_template="post_glow:TWOTEX"/>
+		<combiner diffuse_texture="contour_target" self_illumination_texture="low_target_1" dst="albedo" render_template="post_contour_mask" depth_stencil_target="scene_depth_stencil"/>
+	</effect>
+	
+	
+<!-- Color grade -->
+	<effect name="color_off">
+	</effect>
+	<effect name="color_payday">
+		<combiner diffuse_texture="albedo" dst="canvas" render_template="post_color_grading" material="cg_payday"/>
+		<texture_filter src="canvas" dst="albedo" filter="identity"/>
+	</effect>
+	<effect name="color_heat">
+		<combiner diffuse_texture="albedo" dst="canvas" render_template="post_color_grading" material="cg_heat"/>
+		<texture_filter src="canvas" dst="albedo" filter="identity"/>
+	</effect>
+	<effect name="color_nice">
+		<combiner diffuse_texture="albedo" dst="canvas" render_template="post_color_grading" material="cg_nice"/>
+		<texture_filter src="canvas" dst="albedo" filter="identity"/>
+	</effect>
+	<effect name="color_sin">
+		<combiner diffuse_texture="albedo" dst="canvas" render_template="post_color_grading" material="cg_sin"/>
+		<texture_filter src="canvas" dst="albedo" filter="identity"/>
+	</effect>
+	<effect name="color_bhd">
+		<combiner diffuse_texture="albedo" dst="canvas" render_template="post_color_grading" material="cg_bhd"/>
+		<texture_filter src="canvas" dst="albedo" filter="identity"/>
+	</effect>
+	<effect name="color_xgen">
+		<combiner diffuse_texture="albedo" dst="canvas" render_template="post_color_grading" material="cg_xgen"/>
+		<texture_filter src="canvas" dst="albedo" filter="identity"/>
+	</effect>
+	<effect name="color_xxxgen">
+		<combiner diffuse_texture="albedo" dst="canvas" render_template="post_color_grading" material="cg_xxxgen"/>
+		<texture_filter src="canvas" dst="albedo" filter="identity"/>
+	</effect>	
+	<effect name="color_matrix">
+		<combiner diffuse_texture="albedo" dst="canvas" render_template="post_color_grading" material="cg_matrix"/>
+		<texture_filter src="canvas" dst="albedo" filter="identity"/>
+	</effect>
+	
+<!-- Post AA -->
+	<effect name="AA_off">
+		<defined platform="PS3">
+		<else/>
+			<texture_filter src="albedo" dst="back_buffer" filter="identity"/>
+		</defined>
+	</effect>
+	<effect name="AA">
+	<!-- AA -->
+		<defined platform="PS3">
+			<!--<combiner diffuse_texture="albedo" self_illumination_texture="albedo" dst="back_buffer" render_template="post_AA"/>-->
+			
+			<!--<combiner diffuse_texture="albedo" self_illumination_texture="albedo" dst="back_buffer" render_template="post_AA:ONE_SMP"/>-->
+		<else/>
+			<combiner diffuse_texture="albedo" self_illumination_texture="albedo" dst="back_buffer" render_template="post_AA"/>
+			
+			<!--<combiner diffuse_texture="albedo" self_illumination_texture="albedo" dst="back_buffer" render_template="post_AA:ONE_SMP"/>-->
+		</defined>
+	</effect>
+	
+		<!-- <combiner diffuse_texture="normal" dst="back_buffer" render_template="post_apply_cube" depth_stencil_target="scene_depth_stencil" material="post_apply_cube"/> -->
+		<!-- <combiner diffuse_texture="normal" dst="back_buffer" render_template="post_apply_cube" material="post_composite"/> -->
+		
+<!-- STENCIL DEBUG -->
+		<!--
+		<combiner diffuse_texture="contour_target" dst="back_buffer" render_template="post_stencil_debug:WRITE_MASK_A" depth_stencil_target="scene_depth_stencil"/>
+		<combiner diffuse_texture="contour_target" dst="back_buffer" render_template="post_stencil_debug:WRITE_MASK_B" depth_stencil_target="scene_depth_stencil"/>
+		<combiner diffuse_texture="contour_target" dst="back_buffer" render_template="post_stencil_debug:WRITE_MASK_C" depth_stencil_target="scene_depth_stencil"/>
+		<combiner diffuse_texture="contour_target" dst="back_buffer" render_template="post_stencil_debug:WRITE_MASK_D" depth_stencil_target="scene_depth_stencil"/>
+		<combiner diffuse_texture="contour_target" dst="back_buffer" render_template="post_stencil_debug:WRITE_MASK" depth_stencil_target="scene_depth_stencil"/>
+		-->
+		<!--
+		<combiner diffuse_texture="contour_target" dst="back_buffer" render_template="post_stencil_debug:A" depth_stencil_target="scene_depth_stencil"/>
+		<combiner diffuse_texture="contour_target" dst="back_buffer" render_template="post_stencil_debug:B" depth_stencil_target="scene_depth_stencil"/>
+		<combiner diffuse_texture="contour_target" dst="back_buffer" render_template="post_stencil_debug:C" depth_stencil_target="scene_depth_stencil"/>
+		<combiner diffuse_texture="contour_target" dst="back_buffer" render_template="post_stencil_debug:D" depth_stencil_target="scene_depth_stencil"/>
+		<combiner diffuse_texture="contour_target" dst="back_buffer" render_template="post_stencil_debug" depth_stencil_target="scene_depth_stencil"/>
+		-->
+		
+		<!--
+		<texture_filter src="contour_target" dst="low_target_1" filter="9_tap_filter" bake_filter_taps="false"/>
+		<texture_filter src="low_target_1" dst="low_target_2" filter="9_tap_filter" bake_filter_taps="false"/>
+		-->
+	
+
+	
+	<effect name="identity">
+		<texture_filter src="albedo" dst="back_buffer" filter="identity"/>
+	</effect>		
+</post_processor>
+

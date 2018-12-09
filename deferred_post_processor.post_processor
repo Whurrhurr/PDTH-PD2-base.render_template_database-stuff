@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+
+<post_processor>	
+	<filters>
+		<filter name="box">
+			<render_template name="4_tap_filter"/>
+			<sample weight="0.25" x_offset="-0.66666" y_offset="-0.66666"/>
+			<sample weight="0.25" x_offset=" 0.66666" y_offset="-0.66666"/>
+			<sample weight="0.25" x_offset="-0.66666" y_offset=" 0.66666"/>
+			<sample weight="0.25" x_offset=" 0.66666" y_offset=" 0.66666"/>
+		</filter>
+		<filter name="4_tap_filter_r">
+			<render_template name="4_tap_filter_r"/>
+
+			<sample weight="0.25" x_offset="-0.66666" y_offset="-0.66666"/>
+			<sample weight="0.25" x_offset=" 0.66666" y_offset="-0.66666"/>
+			<sample weight="0.25" x_offset="-0.66666" y_offset=" 0.66666"/>
+			<sample weight="0.25" x_offset=" 0.66666" y_offset=" 0.66666"/>
+			
+			<!--
+			<sample weight="0.25" x_offset="-0.66666" y_offset="-0.66666"/>
+			<sample weight="0.25" x_offset="0.66666" y_offset="-0.66666"/>
+			<sample weight="0.25" x_offset="-0.66666" y_offset="0.66666"/>
+			<sample weight="0.25" x_offset="0.66666" y_offset="0.66666"/>
+			-->
+		</filter>	
+		
+		<filter name="identity">
+			<render_template name="identity"/>
+		</filter>		
+		<filter name="downsample_4x4">
+			<render_template name="downsample_4x4"/>
+			<sample weight="0.0625" x_offset = "-1.5" y_offset = "-1.5"/>
+			<sample weight="0.0625" x_offset = "-0.5" y_offset = "-1.5"/>
+			<sample weight="0.0625" x_offset = " 0.5" y_offset = "-1.5"/>
+			<sample weight="0.0625" x_offset = " 1.5" y_offset = "-1.5"/>
+			<sample weight="0.0625" x_offset = "-1.5" y_offset = "-0.5"/>
+			<sample weight="0.0625" x_offset = "-0.5" y_offset = "-0.5"/>
+			<sample weight="0.0625" x_offset = " 0.5" y_offset = "-0.5"/>
+			<sample weight="0.0625" x_offset = " 1.5" y_offset = "-0.5"/>
+			<sample weight="0.0625" x_offset = "-1.5" y_offset = "0.5"/>
+			<sample weight="0.0625" x_offset = "-0.5" y_offset = "0.5"/>
+			<sample weight="0.0625" x_offset = " 0.5" y_offset = "0.5"/>
+			<sample weight="0.0625" x_offset = " 1.5" y_offset = "0.5"/>
+			<sample weight="0.0625" x_offset = "-1.5" y_offset = "1.5"/>
+			<sample weight="0.0625" x_offset = "-0.5" y_offset = "1.5"/>
+			<sample weight="0.0625" x_offset = " 0.5" y_offset = "1.5"/>
+			<sample weight="0.0625" x_offset = " 1.5" y_offset = "1.5"/>			
+		</filter>		
+		<filter name="initial_luminance">
+			<render_template name="initial_luminance"/>
+			<sample weight="0.11111" x_offset = "-1" y_offset = "-1"/>
+			<sample weight="0.11111" x_offset = "0" y_offset = "-1"/>
+			<sample weight="0.11111" x_offset = "1" y_offset = "-1"/>
+			<sample weight="0.11111" x_offset = "-1" y_offset = "0"/>
+			<sample weight="0.11111" x_offset = "0" y_offset = "0"/>
+			<sample weight="0.11111" x_offset = "1" y_offset = "0"/>
+			<sample weight="0.11111" x_offset = "-1" y_offset = "1"/>
+			<sample weight="0.11111" x_offset = "0" y_offset = "1"/>
+			<sample weight="0.11111" x_offset = "1" y_offset = "1"/>
+		</filter>		
+		<filter name="13_tap_gaussian_blur">
+			<render_template name="gaussian_blur"/>
+			<sample weight="0" x_offset = "0" y_offset = "0"/>
+			
+			<sample weight="0" x_offset = "-1" y_offset = "1"/>
+			<sample weight="0" x_offset = "1" y_offset = "1"/>
+			<sample weight="0" x_offset = "-1" y_offset = "-1"/>
+			<sample weight="0" x_offset = "1" y_offset = "-1"/>
+
+			<sample weight="0" x_offset = "-1" y_offset = "0"/>
+			<sample weight="0" x_offset = "1" y_offset = "0"/>
+			<sample weight="0" x_offset = "0" y_offset = "-1"/>
+			<sample weight="0" x_offset = "0" y_offset = "1"/>
+			
+			<sample weight="0" x_offset = "-2" y_offset = "0"/>
+			<sample weight="0" x_offset = "2" y_offset = "0"/>
+			<sample weight="0" x_offset = "0" y_offset = "-2"/>
+			<sample weight="0" x_offset = "0" y_offset = "2"/>			
+		</filter>
+	</filters>
+
+	<materials config_name="deferred_processor">
+		<material name="shadow">
+			<variable name="fadeout_blend" type="scalar" value="0.5"/>			
+			
+			<filter_color_texture file="core/textures/noise_sharp"/>
+			
+			<variable name="shadow_slice_depths" type="mirror" material="shadow" material_config="shadow_processor" variable="shadow_slice_depths"/>
+			<variable name="shadow_slice_overlap" type="mirror" material="shadow" material_config="shadow_processor" variable="shadow_slice_overlap"/>		
+			<variable name="shadow_fadeout" type="mirror" material="shadow" material_config="shadow_processor" variable="shadow_fadeout"/>			
+			
+			<variable name="slice0" type="mirror" material="shadow" material_config="shadow_processor" variable="slice0"/>			
+			<variable name="slice1" type="mirror" material="shadow" material_config="shadow_processor" variable="slice1"/>			
+			<variable name="slice2" type="mirror" material="shadow" material_config="shadow_processor" variable="slice2"/>			
+			<variable name="slice3" type="mirror" material="shadow" material_config="shadow_processor" variable="slice3"/>			
+		</material>
+		
+		<material name="global_lighting">
+			<variable name="ambient_color" type="vector3" value="0.5 0.7 0.8"/>
+			<variable name="ambient_scale" type="scalar" value="1"/>
+			<variable name="ambient_falloff_scale" type="scalar" value="0.5"/>
+			
+			<variable name="ambient_view_falloff_sharpness" type="scalar" value="0.5"/>
+			
+			<variable name="sky_top_color" type="vector3" value="0.15 0.125 0.0"/>		
+			<variable name="sky_bottom_color" type="vector3" value="0.15 0.125 0.0"/>		
+			<variable name="sky_reflection_top_color" type="vector3" value="0.15 0.125 0.0"/>		
+			<variable name="sky_reflection_bottom_color" type="vector3" value="0.15 0.125 0.0"/>		
+			
+			<variable name="sun_specular_color" type="vector3" value="1 1 1"/>
+			
+			<variable name="height_fade" type="vector3" value="-1000 10000 0"/>
+			<variable name="height_fade_intesity_clamp" type="vector3" value="0.1 1 0"/>
+			
+			<variable name="environment_map_intensity" type="scalar" value="5.0"/>
+			<variable name="environment_map_intensity_shadow" type="scalar" value="3.0"/>
+			<variable name="effect_light_scale" type="scalar" value="1.0"/>
+			
+			<!--
+			<reflection_texture type="cubemap" file="environments/cubemaps/specular_cube"/>
+			-->
+			
+		</material>
+		
+		<material name="local_ssao">		
+			<variable name="occluder_radius" type="scalar" value="2"/>
+			<variable name="falloff_radius" type="scalar" value="10"/>
+			<variable name="intensity" type="scalar" value="2.5"/>
+		</material>
+		
+		<material name="global_ssao">
+			<variable name="occluder_radius" type="scalar" value="8"/>
+			<variable name="falloff_radius" type="scalar" value="35"/>
+			<variable name="intensity" type="scalar" value="2.5"/>
+		</material>
+		
+		<material name="ssao_apply">		
+			<variable name="intensity" type="scalar" value="0.93"/>
+		</material>
+				
+	</materials>
+	
+	<!-- debugging -->
+	<effect name="albedo_visualization">
+		<texture_filter src="albedo" dst="albedo" filter="identity" render_template="identity"/>
+	</effect>
+	<effect name="specular_visualization">
+		<texture_filter src="normal" dst="albedo" filter="identity" render_template="debug_visualization:ALPHA_MASK"/>
+	</effect>
+	<effect name="glossiness_visualization">
+		<texture_filter src="canvas" dst="albedo" filter="identity" render_template="debug_visualization:ALPHA_MASK"/>
+	</effect>
+	<effect name="reflection_visualization">
+		<texture_filter src="reflections" dst="albedo" filter="identity"/>
+	</effect>
+	<effect name="normal_visualization">
+		<texture_filter src="normal" dst="albedo" filter="identity"/>
+	</effect>	
+	<effect name="depth_visualization">
+		<texture_filter src="depth" dst="albedo" filter="identity" render_template="depth_visualization"/>		
+	</effect>	
+	<effect name="ambient_visualization">
+		<texture_filter src="ambient" dst="albedo" filter="identity"/>		
+	</effect>		
+	<effect name="test">
+		<combiner diffuse_texture="albedo" dst="albedo" render_template="spass_directional"/>
+	</effect>	
+	<effect name="debug_shadow">
+		<shadow_mapper dst="shadow_depth"/>
+		<texture_filter src="shadow_depth" dst="albedo" filter="identity"/>
+	</effect>		
+	
+	<render_targets>
+	
+	<!--
+		<render_target name="lowres_shadow" src="temp" w_scale="0.25" h_scale="0.25" format="A8R8G8B8" msaa="false" hint_needs_clearing="false"/>
+	-->
+	
+		<!--
+		<ndefined platform="PS3">
+			<render_target name="lowres_depth_a" src="albedo" w_scale="0.25" h_scale="0.25" format="R32" msaa="false" hint_needs_clearing="false"/>
+			<render_target name="lowres_depth_b" src="albedo" w_scale="0.125" h_scale="0.125" format="R32" msaa="false" hint_needs_clearing="false"/>
+			<render_target name="lowres_depth_c" src="albedo" w_scale="0.062" h_scale="0.062" format="R32" msaa="false" hint_needs_clearing="false"/>
+			
+			 remove below 
+			<render_target name="lowres_depth" src="albedo" w_scale="0.5" h_scale="0.5" format="R32" msaa="false" hint_needs_clearing="false"/>
+			<render_target name="local_ssao" src="albedo" w_scale="0.5" h_scale="0.5" hint_needs_clearing="true" msaa="false"/>	
+			<render_target name="global_ssao" src="albedo" w_scale="0.333333" h_scale="0.333333" hint_needs_clearing="true" msaa="false"/>
+		</ndefined>
+		-->
+	</render_targets>
+	
+	<effect name="no_light">
+	</effect>
+	
+	<effect name="deferred_lighting">
+		<!-- since DBT refuses to early reject skydome pixels on PS3 due to some unknown reason, we mark skydome pixels in the stencil with a fullscreen pass -->	
+		
+		<defined platform="PS3">
+		<!--
+			<combiner dst="temp" depth_stencil_target="scene_depth_stencil" render_template="stencil_mark_skydome"/>
+		-->
+		<else/>
+			<combiner dst="depth" depth_stencil_target="scene_depth_stencil" render_template="depth_patch_skydome"/> <!-- REMOVE -->
+		</defined>
+		
+		<!--
+		<defined platform="PS3 X360">
+			<combiner dst="temp" depth_stencil_target="scene_depth_stencil" render_template="stencil_mark_skydome"/>
+			<defined platform="X360">
+				<x360_renderer_command command="flush_hi_z_stencil" flush_type="ASYNCH"/>
+			</defined>
+		</defined>
+		-->
+		
+		<!-- optimizing the shadows
+			create a lowres shadow -> lowres_shadow (prolly 25% or 12.5%)
+				sample all tree shadows
+			render stencil mask in full res
+				clip(-1) all black and white pixels
+			
+			render big shadow, with depth slices and the stencil created from the lowres target
+			
+			version1
+			sample alot
+			
+			version2
+			bake 8bit depth into buffer before doing blur
+			blur the resulting texture with depth comparison
+		-->
+		
+		<!-- apply shadows -->
+		<defined platform="PS3"> <!-- NVBDT -->
+			<!-- dynamic branching in the fragment program is extremly expensive on PS3 so we fall back to a multiplass approach which utilizes DBT to cull pixels -->
+			<!-- <combiner diffuse_texture="depth" displacement_texture="shadow_depth" dst="temp" depth_stencil_target="scene_depth_stencil" render_template="global_shadow_mask:SLICE0" depth_s="0" depth_e="slice0.y" material="shadow" scriptable="shadow"/>		 	-->
+			
+			<combiner diffuse_texture="depth" displacement_texture="shadow_depth" dst="temp" depth_stencil_target="scene_depth_stencil" render_template="global_shadow_mask:SLICE0" depth_s="0" depth_e="slice0.y" material="shadow" scriptable="shadow"/>
+			<combiner diffuse_texture="depth" displacement_texture="shadow_depth" dst="temp" depth_stencil_target="scene_depth_stencil" render_template="global_shadow_mask:SLICE1" depth_s="slice0.y" depth_e="slice1.y" material="shadow"/>	
+			<combiner diffuse_texture="depth" displacement_texture="shadow_depth" dst="temp" depth_stencil_target="scene_depth_stencil" render_template="global_shadow_mask:SLICE2" depth_s="slice1.y" depth_e="slice2.y" material="shadow"/>		
+			
+		<else/>
+			<combiner diffuse_texture="depth" displacement_texture="shadow_depth" dst="temp" depth_stencil_target="scene_depth_stencil" depth="slice2.y" render_template="global_shadow_mask" material="shadow" scriptable="shadow" render_settings="shadow_quality=high"/>
+		</defined>
+		
+		<combiner dst="temp" depth_stencil_target="scene_depth_stencil" render_template="global_shadow_mask_fill" depth="slice2.y" render_settings="shadow_quality=high" material="shadow"/>
+		 
+		<!--
+		<defined platform="X360">
+			<x360_renderer_command command="gpr_allocation" flags="0" vertex_count="26" pixel_count="102"/>
+		</defined>
+		-->
+		
+		
+		<!-- stencil mark pass for msaa 
+		<defined platform="WIN32" renderer="DX10">			
+			<combiner diffuse_texture="albedo" dst="back_buffer" depth_stencil_target="scene_depth_stencil" render_template="msaa_stencil_edge_detection"/>			
+		</defined>
+		-->
+		
+		<!-- fill depth of skydome pixels with camera_far_range, note: we might want to do this as a clear instead?? -->
+		<!-- TODO : Remove this?, only really used to fix issues with DOF in menus it seems. -->
+		
+		<!--
+		<defined platform="WIN32 X360">
+			<combiner dst="depth" depth_stencil_target="scene_depth_stencil" render_template="depth_patch_skydome"/>
+		</defined>
+		-->
+		
+		<!--
+		<ndefined platform="PS3">
+			<combiner diffuse_texture="depth" dst="lowres_depth" render_template="depth_downsample" skip_not_dirty="depth"/>
+			
+			<combiner diffuse_texture="lowres_depth" dst="local_ssao" render_template="ssao" material="local_ssao" skip_not_dirty="lowres_depth"/>
+			<combiner diffuse_texture="lowres_depth" dst="global_ssao" render_template="ssao" material="global_ssao" skip_not_dirty="lowres_depth"/>
+			<texture_filter src="local_ssao" dst="local_ssao" filter="13_tap_gaussian_blur" render_template="ssao_blur" bake_filter_taps="false" skip_not_dirty="local_ssao"/>
+			<texture_filter src="global_ssao" dst="global_ssao" filter="13_tap_gaussian_blur" render_template="ssao_blur" bake_filter_taps="false" skip_not_dirty="global_ssao"/>
+		</ndefined>
+		-->
+		
+		<!--
+		<combiner diffuse_texture="depth" dst="lowres_depth_a" render_template="ambocc_depth_downscale"/>
+		<texture_filter src="lowres_depth_a" dst="lowres_depth_b" filter="4_tap_filter_r" bake_filter_taps="false"/>
+		<texture_filter src="lowres_depth_b" dst="lowres_depth_b" filter="4_tap_filter_r" bake_filter_taps="false"/>
+		<texture_filter src="lowres_depth_b" dst="lowres_depth_a" filter="13_tap_gaussian_blur" bake_filter_taps="false"/>
+		<combiner diffuse_texture="lowres_depth_a" dst="normal" render_template="ambient_occlusion" material="local_ssao"/>
+		-->
+		
+		<!-- deferred shading modifier -->
+		
+		<!-- GENERATE_PROJ move this to another pass, to support spec on of later -->
+		<!-- Simple and advanced pass -->
+		<!-- TODO : Figure out if this is cheaper than feeding it two times, shader switch and stencil check switch cost more -->
+		<!-- Dynamic lights -->
+		
+		<deferred_shading 
+			dst = "temp"
+			depth_stencil_target="scene_depth_stencil"
+			
+			diffuse_texture="albedo"			
+			
+			omni_rt="omni"
+			omni_specular_rt="omni:SPECULAR" 
+			omni_cube_projection_rt="omni:PROJECTION"
+			omni_specular_cube_projection_rt="omni:PROJECTION:SPECULAR"
+			
+			spot_rt="spot"  
+			spot_specular_rt="spot:SPECULAR" 
+			spot_projection_rt="spot:PROJECTION"
+			spot_specular_projection_rt="spot:PROJECTION:SPECULAR" 
+
+			directional_rt="deferred_directional"
+			directional_specular_rt="deferred_directional_specular"
+			geometry_file="core/shaders/light_volumes"
+			omni_geometry="omni"
+			spot_geometry="spot"
+			omni_attenuation_lookup="core/shaders/light_lookup_linear"
+			spot_attenuation_lookup="core/shaders/light_lookup_hard"
+		/>
+		
+		<!-- Global lighting simple -->
+		<combiner diffuse_texture="albedo" dst="canvas" depth_stencil_target="scene_depth_stencil" render_template="global_lighting" material="global_lighting" scriptable="apply_ambient"/>
+		
+		
+		<!-- Global lighting adv 
+		<!-- Add specular to the adv light pass, and even albedo -->
+		<!-- Remove spec and albedo from this pass, remove -->
+		<!--
+		<combiner diffuse_texture="albedo" dst="back_buffer" depth_stencil_target="scene_depth_stencil" render_template="global_lighting" material="global_lighting" scriptable="apply_ambient"/>
+		-->
+		
+		<!--
+		<ndefined platform="PS3">
+			<combiner self_illumination_texture="global_ssao" diffuse_texture="local_ssao" dst="light_accumulation" depth_stencil_target="scene_depth_stencil" render_template="ambient_occlusion" material="ssao_apply" scriptable="ssao" skip_not_dirty="global_ssao"/>
+		</ndefined>
+		-->
+	</effect>
+	
+	<effect name="projection_generation">
+		<combiner diffuse_texture="depth" displacement_texture="shadow_depth" dst="canvas" depth_stencil_target="scene_depth_stencil" depth="slice2.y" render_template="global_shadow_mask" material="shadow" scriptable="shadow" render_settings="shadow_quality=high"/>	
+		<deferred_shading
+			dst = "temp"
+			depth_stencil_target="scene_depth_stencil"
+			
+			diffuse_texture="albedo"			
+			
+			omni_rt="omni"
+			omni_specular_rt="omni:SPECULAR" 
+			omni_cube_projection_rt="omni:PROJECTION"
+			omni_specular_cube_projection_rt="omni:PROJECTION:SPECULAR"
+			
+			spot_rt="spot"  
+			spot_specular_rt="spot:SPECULAR" 
+			spot_projection_rt="spot:PROJECTION"
+			spot_specular_projection_rt="spot:PROJECTION:SPECULAR" 
+
+			directional_rt="deferred_directional"
+			directional_specular_rt="deferred_directional_specular"
+			geometry_file="core/shaders/light_volumes"
+			omni_geometry="omni"
+			spot_geometry="spot"
+			omni_attenuation_lookup="core/shaders/light_lookup_linear"
+			spot_attenuation_lookup="core/shaders/light_lookup_hard"
+		/>
+	</effect>	
+</post_processor>
